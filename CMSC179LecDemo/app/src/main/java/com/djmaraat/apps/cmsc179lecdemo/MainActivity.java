@@ -3,6 +3,8 @@ package com.djmaraat.apps.cmsc179lecdemo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -13,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText editTextTodo;
     ListView listViewTodo;
+    ArrayList<String> arrayListTodo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     void generateUIAndData() {
         // Create the Array List of to do items
-        ArrayList<String> arrayListTodo = new ArrayList<>();
+        arrayListTodo = new ArrayList<>();
         arrayListTodo.add("First List Item");
         arrayListTodo.add("Second List Item");
 
@@ -39,8 +42,21 @@ public class MainActivity extends AppCompatActivity {
         // Bind the Array Adapter to the List View
         listViewTodo.setAdapter(arrayAdapterTodo);
 
-        // TODO Add an onKeyListener to the EditText that listens for either a “D-pad center button”
-        // TODO click or the Enter key being pressed.
+        // Add an onKeyListener to the EditText that listens for either a “D-pad center button”
+        // click or the Enter key being pressed.
+        editTextTodo.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN)
+                    if ((keyCode == KeyEvent.KEYCODE_DPAD_CENTER) ||
+                            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        arrayListTodo.add(0, editTextTodo.getText().toString());
+                        arrayAdapterTodo.notifyDataSetChanged();
+                        editTextTodo.setText("");
+                        return true;
+                    }
+                return false;
+            } });
+
 
     }
 }
